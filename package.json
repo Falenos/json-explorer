@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dompurify": "^3.0.5",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.3",
     "@types/lodash": "^4.14.199",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

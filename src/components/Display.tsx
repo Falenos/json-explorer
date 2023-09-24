@@ -1,13 +1,14 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 import KeyValue from './KeyValue';
 import useClipboardCopy from '../hooks/useClipboardCopy';
 
 interface DisplayProps {
-  data: JSONValue;
+  data: JSONObject | JSONArray;
   nestingLevel?: number;
   onKeyClick?: ([keyPath, value]: [string, JSONValue]) => void;
   selectedKey?: string | null;
-  onEdit?: (newData: JSONObject) => void;
+  onEdit?: (newData: JSONObject | JSONArray) => void;
 }
 
 const Display: React.FC<DisplayProps> = ({
@@ -20,44 +21,65 @@ const Display: React.FC<DisplayProps> = ({
   const outerRef = useRef<HTMLPreElement | null>(null);
   const { copyToClipboard, copied } = useClipboardCopy(outerRef);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>(JSON.stringify(data, null, 2));
+  const [inputValue, setInputValue] = useState<string>(DOMPurify.sanitize(JSON.stringify(data, null, 2)));
   const [isValidJSON, setIsValidJSON] = useState<boolean>(true);
+
+  useEffect(() => {
+    setInputValue(DOMPurify.sanitize(JSON.stringify(data, null, 2)));
+  }, [data]);
+
+  function validateJSON(jsonString: string): boolean {
+    try {
+      const sanitizedInputValue = DOMPurify.sanitize(jsonString);
+      validateJSON.parsed = JSON.parse(sanitizedInputValue);
+      setIsValidJSON(true);
+      return true;
+    } catch (e) {
+      setIsValidJSON(false);
+      validateJSON.parsed = data;
+      return false;
+    }
+  }
+  validateJSON.parsed = data;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
-    try {
-      JSON.parse(event.target.value);
-      setIsValidJSON(true);
-    } catch (e) {
-      setIsValidJSON(false);
-    }
+    validateJSON(event.target.value);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const parsedValue = JSON.parse(inputValue);
-      onEdit?.(parsedValue);
-      setInputValue(JSON.stringify(parsedValue, null, 2));
+    validateJSON(inputValue);
+    if (isValidJSON) {
       setIsEditing(false);
-      setIsValidJSON(true);
-    } catch (e) {
-      setIsValidJSON(false);
+      onEdit?.(validateJSON.parsed);
     }
   };
 
   const handleCancel = () => {
     // console.log('inputValue', JSON.parse(inputValue)?.hasError , JSON.parse(JSON.stringify(data, null, 2))?.hasError);
-    if (inputValue !== JSON.stringify(data, null, 2)) {
+    const dataToCompare = JSON.stringify(data, null, 2);
+    if (inputValue !== dataToCompare) {
       if (window.confirm('Are you sure you want to discard your changes?')) {
-        setInputValue(JSON.stringify(data, null, 2));
         setIsEditing(false);
+        setInputValue(dataToCompare);
         setIsValidJSON(true);
       }
     } else {
       setIsEditing(false);
       setIsValidJSON(true);
     }
+  };
+
+  const handleFileDownload = () => {
+    const sanitizedInputValue = DOMPurify.sanitize(inputValue);
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(sanitizedInputValue);
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "data.json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
   };
 
   return (
@@ -73,6 +95,9 @@ const Display: React.FC<DisplayProps> = ({
           </button>}
           <button onClick={copyToClipboard} title="Copy JSON to Clipboard">
             Copy to Clipboard
+          </button>
+          <button onClick={handleFileDownload} title="Download JSON data">
+            Download
           </button>
           {copied && <div className="copied-indicator">Copied!</div>}
         </div>
@@ -100,7 +125,7 @@ const Display: React.FC<DisplayProps> = ({
         </pre>
         {isEditing && (
           <div className="textarea-info">
-            <div className={`character-count ${isValidJSON ? '' : 'invalid'}`}>{inputValue.length} / {10000}</div>
+            <div className={`character-count ${isValidJSON ? '' : 'invalid'}`}>{inputValue.length} / {200000}</div>
             {isValidJSON ? <div className="success-message">Valid JSON</div> : <div className="error invalid">Invalid JSON</div>}
           </div>
         )}
