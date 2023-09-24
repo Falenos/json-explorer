@@ -38,6 +38,7 @@ const Display: React.FC<DisplayProps> = ({
     try {
       const parsedValue = JSON.parse(inputValue);
       onEdit?.(parsedValue);
+      setInputValue(JSON.stringify(parsedValue, null, 2));
       setIsEditing(false);
       setIsValidJSON(true);
     } catch (e) {
@@ -92,7 +93,8 @@ const Display: React.FC<DisplayProps> = ({
               onChange={handleInputChange}
               placeholder="Enter JSON data here"
               title="Edit JSON data"
-              style={{width: '100%', height: '400px'}}
+              rows={40}
+              style={{width: '100%'}}
             />
           )}
         </pre>
