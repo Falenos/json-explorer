@@ -25,12 +25,14 @@ Built Bun and Vite, using [this](https://bun.sh/guides/ecosystem/vite) for the b
 - Display of key paths and values on click.
 - Copying the whole JSON or a subsection made easy.
 - Copying and pasting in your IDE should be a valid formatted json.
+- Editing with basic validation
 
 ## Usage
 1. Upload JSON Data:
 - Click the "Upload JSON" button in the header.
 - Select a JSON file from your local machine.
 - The JSON data will be loaded and displayed on the left side of the application.
+- Alternatively you click the edit button and paste a JSON object
 
 2. Explore JSON Data:
 - Click on keys to navigate through the JSON structure.
