@@ -26,13 +26,14 @@ const KeyValue: React.FC<KeyValueProps> = ({
 
   const handleClick = () => {
     if (onKeyClick) {
+      window.scrollTo(0, 0);
       onKeyClick([keyPath, value]);
     }
   };
 
   return (
     <div className="key-value-entry">
-      {objectKey && <span onClick={handleClick} className={selectedKey === objectKey ? 'selected-key' : 'key'} style={{color: 'blue', cursor: 'pointer'}}>
+      {objectKey && <span onClick={handleClick} className={selectedKey === objectKey ? 'selected-key' : 'key'} style={onKeyClick ? {color: 'blue', cursor: 'pointer'} : {}}>
         <Ident level={nestingLevel} />
         "{objectKey}":<>&nbsp;</>
       </span>}

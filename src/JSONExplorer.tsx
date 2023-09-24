@@ -18,7 +18,7 @@ const JSONExplorer: React.FC = () => {
 
       <main className="main">
         <section className="left-section">
-          <Display data={JSONData} onKeyClick={setSelectedKeyValue} />
+          <Display data={JSONData} onKeyClick={setSelectedKeyValue} onEdit={setJSONData}/>
         </section>
 
         {path && (
