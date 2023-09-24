@@ -1,0 +1,25 @@
+{
+  "date": "2021-10-27T07:49:14.896Z",
+  "hasError": false,
+  "fields": [
+    {
+      "id": "4c212130",
+      "prop": "iban",
+      "value": "DE81200505501265402568",
+      "hasError": false
+    }
+  ],
+  "version": 10,
+  "empty1": null,
+  "empty2": {},
+  "empty3": [],
+  "obj1": {
+    "prop1": "value1"
+  },
+  "arr1": [ "value1", "value2", "value3" ],
+  "arr2": [ 
+    "value1", 
+    "value2", 
+    "value3" 
+  ]
+}
