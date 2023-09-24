@@ -6,7 +6,10 @@
       "id": "4c212130",
       "prop": "iban",
       "value": "DE81200505501265402568",
-      "hasError": false
+      "hasError": false,
+      "obj1": {
+        "prop1": "value1"
+      }
     }
   ],
   "version": 10,

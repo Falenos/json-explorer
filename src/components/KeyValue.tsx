@@ -39,7 +39,7 @@ const KeyValue: React.FC<KeyValueProps> = ({
       </span>}
       {isArray && (
         <span className="key-value-array">
-          <Ident level={nestingLevel} show={!objectKey}/>{'['}
+          <Ident level={nestingLevel} show={!objectKey}/>{'['}{!isEmptyArray && '\n'}
           {value.map((item: JSONValue, index: number) => (
             <KeyValue
               key={index}
@@ -57,7 +57,7 @@ const KeyValue: React.FC<KeyValueProps> = ({
       )}
       {isObject && (
         <span className="key-value-object">
-          <Ident level={nestingLevel} show={!objectKey}/>{'{'}
+          <Ident level={nestingLevel} show={!objectKey}/>{'{'}{!isEmptyObject && '\n'}
           {Object.keys(value).map((key) => (
             <KeyValue
               key={key}
@@ -76,7 +76,8 @@ const KeyValue: React.FC<KeyValueProps> = ({
       {!isArray && !isObject && (
         <span className="value"><Ident level={nestingLevel} show={!objectKey}/>{JSON.stringify(value)}</span>
       )}
-      {hasNextSibling && <>,<br /></>}
+      {hasNextSibling && <>{','}</>}
+      {'\n'}
     </div>
   );
 };
