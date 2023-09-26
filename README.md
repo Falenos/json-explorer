@@ -1,6 +1,6 @@
 # JSON explorer
 
-JSON Explorer is a React application that allows users to explore and interact with JSON data in a user-friendly way. It provides features like viewing and navigating JSON structures, copying JSON data to the clipboard, and more.
+[JSON Explorer](https://falenos.github.io/json-explorer/) is a React application that allows users to explore and interact with JSON data in a user-friendly way. It provides features like viewing and navigating JSON structures, copying JSON data to the clipboard, and more.
 
 Built Bun and Vite, using [this](https://bun.sh/guides/ecosystem/vite) for the boilerplate
 
